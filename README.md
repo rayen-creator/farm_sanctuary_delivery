@@ -19,7 +19,7 @@ To get a local copy up and running follow these simple example steps.
 ### 🚧 Prerequisites
 
 You may find below the list of things you need to use this project :
-* Make sure flutterSDK installed on your system.
+* Make sure flutterSDK (3.3.10) installed on your system.
 
 ### 🛠 Installation
 

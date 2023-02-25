@@ -1,16 +1,8 @@
-# farm_sanctuary_delivery
+# Farm Sanctuary Delivery
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/57809239/221370824-2a33719b-9492-4bd5-aa96-f514d8f6846a.png"  alt="logo" width="40%" height="330px" />
 
-A new Flutter project.
 
-## Getting Started
+This is the official Farm Sanctuary web app documentation <br/>
+  </p>
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

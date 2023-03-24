@@ -6,6 +6,8 @@ import 'package:flutter/src/animation/animation_controller.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../services/sessionService.dart';
+
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -14,9 +16,11 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  
   @override
   void initState() {
     super.initState();
+    // username = _session.getCurrentUsername();
   }
 
   @override
@@ -42,26 +46,26 @@ class _SettingsState extends State<Settings> {
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: [
-            BigUserCard(
+            SimpleUserCard(
               // cardColor: Colors.red,
-              userName: "Alex ",
+              userName: "username",
               userProfilePic: AssetImage(
                 "assets/images/Logo farmSanctuary delivery.png",
               ),
-              cardActionWidget: SettingsItem(
-                icons: Icons.edit,
-                iconStyle: IconStyle(
-                  withBackground: true,
-                  borderRadius: 50,
-                  backgroundColor: Colors.yellow[600],
-                ),
-                title: "Modify",
-                titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                subtitle: "Tap to change your data",
-                onTap: () {
-                  // Navigator.pushNamed(context, '/profile');
-                },
-              ),
+              // cardActionWidget: SettingsItem(
+              //   icons: Icons.edit,
+              //   iconStyle: IconStyle(
+              //     withBackground: true,
+              //     borderRadius: 50,
+              //     backgroundColor: Colors.yellow[600],
+              //   ),
+              //   title: "Modify",
+              //   titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              //   subtitle: "Tap to change your data",
+              //   onTap: () {
+              //     // Navigator.pushNamed(context, '/profile');
+              //   },
+              // ),
             ),
             SettingsGroup(
               items: [
@@ -127,23 +131,6 @@ class _SettingsState extends State<Settings> {
                   iconStyle: IconStyle(iconsColor: Colors.grey, backgroundColor: Colors.transparent),
                   title: "Sign Out",
                   titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                SettingsItem(
-                  onTap: () {},
-                  icons: CupertinoIcons.repeat,
-                  iconStyle: IconStyle(iconsColor: Colors.grey, backgroundColor: Colors.transparent),
-                  title: "Change email",
-                  titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                SettingsItem(
-                  onTap: () {},
-                  icons: CupertinoIcons.delete_solid,
-                  iconStyle: IconStyle(iconsColor: Colors.grey, backgroundColor: Colors.transparent),
-                  title: "Delete account",
-                  titleStyle: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ],
             ),

@@ -31,7 +31,7 @@ _In order to install the app you need to follow the instructions below :_
    ```sh
    $ git clone https://github.com/rayen-creator/farm_sanctuary_delivery
    ```
-2. Install NPM packages dependencies 
+2. Install flutter packages dependencies 
    ```sh
    $ flutter pub get
    ```

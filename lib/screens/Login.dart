@@ -1,4 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:farm_sanctuary_delivery/screens/Home.dart';
+import 'package:farm_sanctuary_delivery/screens/Menu.dart';
+import 'package:farm_sanctuary_delivery/screens/Settings.dart';
 import 'package:farm_sanctuary_delivery/services/graphqlService.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +16,7 @@ class _LoginState extends State<Login> {
   final GraphQLService _graphQLService = GraphQLService();
 
   final _FormKey = GlobalKey<FormState>();
-  final emailcontroller = TextEditingController();
+  final logincontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
   late Image background;
 
@@ -31,8 +34,14 @@ class _LoginState extends State<Login> {
 
   bool _passwordVisible = false;
   bool isLoggedIn = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return GestureDetector(
         onTap: () => {FocusManager.instance.primaryFocus?.unfocus(), setState(() {})},
         child: Scaffold(
@@ -94,17 +103,17 @@ class _LoginState extends State<Login> {
                                         child: TextFormField(
                                           decoration: const InputDecoration(
                                             prefixIcon: Icon(Icons.person),
-                                            label: Text('Username'),
+                                            label: Text('Login'),
                                             border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(15.0),
                                               ),
                                             ),
                                           ),
-                                          controller: emailcontroller,
+                                          controller: logincontroller,
                                           validator: (value) {
                                             if (value!.isEmpty) {
-                                              return 'Email is required';
+                                              return 'Login is required';
                                             }
                                             return null;
                                           },
@@ -162,13 +171,40 @@ class _LoginState extends State<Login> {
                                           child: const Text("Sign in"),
                                           onPressed: () async {
                                             if (_FormKey.currentState!.validate()) {
+                                              // setState(() {
+                                              //   isLoading = true; // set isLoading state to true
+                                              // });
                                               isLoggedIn = await _graphQLService.login(
-                                                  email: emailcontroller.text, password: passwordcontroller.text);
+                                                  login: logincontroller.text, password: passwordcontroller.text);
+
+                                              print('no validate :' + isLoggedIn.toString());
+                                              // setState(() {
+                                              //   isLoading = false; // set isLoading state to false
+                                              // });
+
                                               if (isLoggedIn) {
-                                                MaterialPageRoute(builder: (context) => const Home());
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(builder: (context) => const Menu()));
+                                              } else {
+                                                final snackBar = SnackBar(
+                                                  /// need to set following properties for best effect of awesome_snackbar_content
+                                                  elevation: 0,
+                                                  behavior: SnackBarBehavior.floating,
+                                                  backgroundColor: Colors.transparent,
+                                                  content: AwesomeSnackbarContent(
+                                                    title: 'Oops!',
+                                                    message:
+                                                        'Something went wrong please make sure to use the right credentials',
+
+                                                    /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                                    contentType: ContentType.failure,
+                                                  ),
+                                                );
+
+                                                ScaffoldMessenger.of(context)
+                                                  ..hideCurrentSnackBar()
+                                                  ..showSnackBar(snackBar);
                                               }
-                                            } else {
-                                              print('no validate');
                                             }
                                           },
                                         ),

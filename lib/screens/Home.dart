@@ -28,6 +28,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(
+      AssetImage('assets/images/background.jpg'),
+      context,
+    );
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -71,10 +75,9 @@ class _HomeState extends State<Home> {
               )),
             ),
           ),
-
           Center(
               child: ListView.builder(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   shrinkWrap: false,
                   itemCount: entries.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -93,16 +96,16 @@ class _HomeState extends State<Home> {
                                       backgroundColor: Colors.white12,
                                       children: [
                                         ConstrainedBox(
-                                          constraints: BoxConstraints(),
+                                          constraints: const BoxConstraints(),
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                             child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text("Pick up location : " + entries[index]),
                                                   Text("Destination : " + entries[index]),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 10,
                                                   ),
                                                 ]),

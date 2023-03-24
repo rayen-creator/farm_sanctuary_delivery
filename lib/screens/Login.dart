@@ -171,16 +171,16 @@ class _LoginState extends State<Login> {
                                           child: const Text("Sign in"),
                                           onPressed: () async {
                                             if (_FormKey.currentState!.validate()) {
-                                              // setState(() {
-                                              //   isLoading = true; // set isLoading state to true
-                                              // });
+                                              setState(() {
+                                                isLoading = true; // set isLoading state to true
+                                              });
                                               isLoggedIn = await _graphQLService.login(
                                                   login: logincontroller.text, password: passwordcontroller.text);
 
                                               print('no validate :' + isLoggedIn.toString());
-                                              // setState(() {
-                                              //   isLoading = false; // set isLoading state to false
-                                              // });
+                                              setState(() {
+                                                isLoading = false; // set isLoading state to false
+                                              });
 
                                               if (isLoggedIn) {
                                                 Navigator.of(context)

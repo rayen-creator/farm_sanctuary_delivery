@@ -1,3 +1,5 @@
+import 'package:farm_sanctuary_delivery/screens/Home.dart';
+import 'package:farm_sanctuary_delivery/services/graphqlService.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -8,6 +10,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final GraphQLService _graphQLService = GraphQLService();
+
   final _FormKey = GlobalKey<FormState>();
   final emailcontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
@@ -26,7 +30,7 @@ class _LoginState extends State<Login> {
   }
 
   bool _passwordVisible = false;
-
+  bool isLoggedIn = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -69,14 +73,13 @@ class _LoginState extends State<Login> {
                             const Padding(
                               padding: EdgeInsets.only(left: 20, bottom: 10, top: 20, right: 0),
                               child: Text("Welcome Back",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 24, color: Color(0xff0E4F55))),
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Color(0xff0E4F55))),
                             ),
                             const Padding(
                               padding: EdgeInsets.only(left: 20, bottom: 5, top: 0, right: 0),
                               child: Text("Use your username and password to login",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w300, fontSize: 15, color: Colors.black)),
+                                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15, color: Colors.black)),
                             ),
                             Form(
                               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -126,9 +129,7 @@ class _LoginState extends State<Login> {
                                             suffixIcon: passwordcontroller.text.isNotEmpty
                                                 ? IconButton(
                                                     icon: Icon(
-                                                      _passwordVisible
-                                                          ? Icons.visibility
-                                                          : Icons.visibility_off,
+                                                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
                                                       color: Theme.of(context).primaryColorDark,
                                                     ),
                                                     onPressed: () {
@@ -159,9 +160,13 @@ class _LoginState extends State<Login> {
                                         padding: const EdgeInsets.all(10.0),
                                         child: ElevatedButton(
                                           child: const Text("Sign in"),
-                                          onPressed: () {
+                                          onPressed: () async {
                                             if (_FormKey.currentState!.validate()) {
-                                              print("validate");
+                                              isLoggedIn = await _graphQLService.login(
+                                                  email: emailcontroller.text, password: passwordcontroller.text);
+                                              if (isLoggedIn) {
+                                                MaterialPageRoute(builder: (context) => const Home());
+                                              }
                                             } else {
                                               print('no validate');
                                             }

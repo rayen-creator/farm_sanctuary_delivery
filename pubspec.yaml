@@ -41,6 +41,7 @@ dependencies:
   graphql_flutter: ^5.1.2
   shared_preferences: ^2.0.20
   awesome_snackbar_content: ^0.1.2
+  location: ^4.4.0
 
 
 dev_dependencies:

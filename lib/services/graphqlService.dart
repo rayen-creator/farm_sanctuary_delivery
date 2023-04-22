@@ -14,8 +14,39 @@ class GraphQLService {
     _session.init();
   }
 
-  Future<bool> SendLocation({required String longtitue, required String latitude}) async {
+  Future<bool> SendLocation(String longtitue, String latitude) async {
     try {
+      var id = _session.id;
+      QueryResult result = await client.mutate(
+        MutationOptions(
+          document: gql("""
+              mutation UpdateLocation(\$input: AgentLocationInput!) {
+                updateLocation(input: \$input) {
+                      id
+                      login
+                      fullName
+                      longitude
+                      latitude
+                  }
+                }
+            """),
+          variables: {
+            "input": {
+              "id": id,
+              "longitude": longtitue,
+              "latitude": latitude,
+            }
+          },
+        ),
+      );
+      if (result.hasException) {
+        throw Exception(result.exception);
+      } else {
+        var longtitude = result.data?['updateLocation']['longitude'];
+        var latitude = result.data?['updateLocation']['latitude'];
+        print("longtitude" + longtitude.toString());
+        print("latitude" + latitude.toString());
+      }
       return true;
     } catch (error) {
       return false;
@@ -36,6 +67,7 @@ class GraphQLService {
                       passwordIsValid
                       message
                       agent {
+                        id
                         fullName
                       }
                   }
@@ -66,11 +98,13 @@ class GraphQLService {
         var agent = result.data?['loginDriver']['agent'];
         if (agent != null) {
           var agentfullName = agent['fullName'];
-
+          var agentId = agent['id'];
           print('passwordIsValid : ' + passwordIsValid.toString());
           print('userfound : ' + userfound.toString());
           print('agentfullName : ' + agentfullName.toString());
-          _session.signin(agentfullName, login);
+          _session.signin(agentId, agentfullName);
+          print("id" + _session.id.toString());
+
           return true;
         } else {
           return false;

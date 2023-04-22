@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,14 +12,46 @@ class _HomeState extends State<Home> {
   final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
   final List<int> colorCodes = <int>[600, 500, 100];
 
-  //****************Getting_current_postion_through_GPS*****************
-  String location = 'Null';
-  String Address = 'Null';
+  //***************r*Getting_current_postion_through_GPS*****************
+  // String location = 'Null';
+  // String Address = 'Null';
   //**********************************************
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  LocationData? _userLocation;
+
+// This function will get user location
+  Future<void> _getUserLocation() async {
+    Location location = Location();
+
+    // Check if location service is enable
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    // Check if permission is granted
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    final locationData = await location.getLocation();
+    setState(() {
+      _userLocation = locationData;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _getUserLocation();
   }
 
   @override
@@ -46,105 +79,27 @@ class _HomeState extends State<Home> {
           ),
         )),
       ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/background.jpg"),
-                // image: background.image,
-                fit: BoxFit.cover,
-              ),
-            ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // ElevatedButton(onPressed: _getUserLocation, child: const Text('Check Location')),
+              const SizedBox(height: 25),
+              // Display latitude & longtitude
+              _userLocation != null
+                  ? Wrap(
+                      children: [
+                        Text('Your latitude: ${_userLocation?.latitude}'),
+                        const SizedBox(width: 10),
+                        Text('Your longtitude: ${_userLocation?.longitude}')
+                      ],
+                    )
+                  : const Text('Please enable location service and grant permission')
+            ],
           ),
-          Positioned(
-            top: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: const Center(
-                  child: Text(
-                "Delivery list",
-                style: TextStyle(
-                  color: Color(0xff0E4F55),
-                  decoration: TextDecoration.underline,
-                ),
-              )),
-            ),
-          ),
-          Center(
-              child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: false,
-                  itemCount: entries.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Center(
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    side: const BorderSide(color: Colors.blueAccent, width: 1)),
-                                child: Column(children: [
-                                  ExpansionTile(
-                                      initiallyExpanded: true,
-                                      title: Text("Delivery ID " + entries[index],
-                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                                      backgroundColor: Colors.white12,
-                                      children: [
-                                        ConstrainedBox(
-                                          constraints: const BoxConstraints(),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                            child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("Pick up location : " + entries[index]),
-                                                  Text("Destination : " + entries[index]),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                ]),
-                                          ),
-                                        ),
-                                      ])
-                                ])
-                                // child: Card(
-                                //   color: Colors.white.withOpacity(0.8),
-                                //   shape: RoundedRectangleBorder(
-                                //     borderRadius: BorderRadius.circular(25.0),
-                                //   ),
-                                //   elevation: 0,
-                                //   child: Column(
-                                //     children: [Text('Entry ${entries[index]}')],
-                                //   ),
-                                // ),
-                                )));
-                  })
-
-              // children: [
-
-              // ],
-              ),
-
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 10.0, left: 10.0),
-          //   child: Card(
-          //     color: Colors.white.withOpacity(0.8),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(25.0),
-          //     ),
-          //     elevation: 0,
-          //     child: Column(
-          //       children: [Text("data")],
-          //     ),
-          //   ),
-          // ),
-        ],
+        ),
       ),
     );
   }

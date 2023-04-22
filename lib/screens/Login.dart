@@ -4,6 +4,7 @@ import 'package:farm_sanctuary_delivery/screens/Menu.dart';
 import 'package:farm_sanctuary_delivery/screens/Settings.dart';
 import 'package:farm_sanctuary_delivery/services/graphqlService.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _LoginState extends State<Login> {
   final logincontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
   late Image background;
-
+  
   @override
   void initState() {
     super.initState();
@@ -28,7 +29,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+  
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),

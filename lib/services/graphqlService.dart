@@ -1,7 +1,6 @@
 import 'dart:ffi';
 
 import 'package:farm_sanctuary_delivery/graphql/graphql_config.dart';
-import 'package:farm_sanctuary_delivery/models/LoginDriverResponse.dart';
 import 'package:farm_sanctuary_delivery/services/sessionService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -13,6 +12,14 @@ class GraphQLService {
   GraphQLService() {
     _session = SessionService();
     _session.init();
+  }
+
+  Future<bool> SendLocation({required String longtitue, required String latitude}) async {
+    try {
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   Future<bool> login({
@@ -46,9 +53,6 @@ class GraphQLService {
       if (result.hasException) {
         throw Exception(result.exception);
       } else {
-        print("response" + result.data.toString());
-
-        // final loginDriverResponse = LoginDriverResponse.fromJson(result.data?['loginDriver']);
         var passwordIsValid = result.data?['loginDriver']['passwordIsValid'] as bool;
         print("passwordIsValid" + passwordIsValid.toString());
         if (!passwordIsValid) {
@@ -60,7 +64,6 @@ class GraphQLService {
           return false;
         }
         var agent = result.data?['loginDriver']['agent'];
-        print("agent " + agent.toString());
         if (agent != null) {
           var agentfullName = agent['fullName'];
 

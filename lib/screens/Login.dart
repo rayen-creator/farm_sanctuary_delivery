@@ -1,10 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:farm_sanctuary_delivery/screens/Home.dart';
 import 'package:farm_sanctuary_delivery/screens/Menu.dart';
-import 'package:farm_sanctuary_delivery/screens/Settings.dart';
 import 'package:farm_sanctuary_delivery/services/graphqlService.dart';
+import 'package:farm_sanctuary_delivery/services/sessionService.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -15,16 +13,20 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final GraphQLService _graphQLService = GraphQLService();
+  late final SessionService _session;
 
   final _FormKey = GlobalKey<FormState>();
   final logincontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
   late Image background;
-  
+ 
+
   @override
   void initState() {
     super.initState();
     passwordcontroller.clear();
+    _session = SessionService();
+    _session.init();
   }
 
   @override
@@ -37,7 +39,9 @@ class _LoginState extends State<Login> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-  
+    // if (_session.id != '') {
+    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Menu()));
+    // }
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),

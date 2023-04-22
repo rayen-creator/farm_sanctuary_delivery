@@ -16,11 +16,13 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  
+  late final SessionService _session;
+
   @override
   void initState() {
+    _session = SessionService();
+    _session.init();
     super.initState();
-    // username = _session.getCurrentUsername();
   }
 
   @override
@@ -47,25 +49,10 @@ class _SettingsState extends State<Settings> {
         child: ListView(
           children: [
             SimpleUserCard(
-              // cardColor: Colors.red,
-              userName: "username",
+              userName: _session.login.toString(),
               userProfilePic: AssetImage(
                 "assets/images/Logo farmSanctuary delivery.png",
               ),
-              // cardActionWidget: SettingsItem(
-              //   icons: Icons.edit,
-              //   iconStyle: IconStyle(
-              //     withBackground: true,
-              //     borderRadius: 50,
-              //     backgroundColor: Colors.yellow[600],
-              //   ),
-              //   title: "Modify",
-              //   titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              //   subtitle: "Tap to change your data",
-              //   onTap: () {
-              //     // Navigator.pushNamed(context, '/profile');
-              //   },
-              // ),
             ),
             SettingsGroup(
               items: [
@@ -75,9 +62,7 @@ class _SettingsState extends State<Settings> {
                   title: 'Appearance',
                   titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   subtitle: "Make Ziar'App yours",
-                  onTap: () {
-                    // Navigator.pushNamed(context, '/login');
-                  },
+                  onTap: () {},
                 ),
                 SettingsItem(
                   onTap: () {},
@@ -125,6 +110,7 @@ class _SettingsState extends State<Settings> {
               items: [
                 SettingsItem(
                   onTap: () {
+                    _session.signout();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
                   },
                   icons: Icons.exit_to_app_rounded,

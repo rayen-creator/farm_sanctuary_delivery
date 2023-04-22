@@ -1,3 +1,4 @@
+import 'package:farm_sanctuary_delivery/services/graphqlService.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
@@ -9,6 +10,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GraphQLService _graphQLService = GraphQLService();
+
   final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
   final List<int> colorCodes = <int>[600, 500, 100];
 
@@ -45,6 +48,11 @@ class _HomeState extends State<Home> {
     final locationData = await location.getLocation();
     setState(() {
       _userLocation = locationData;
+      var longtitude = _userLocation?.longitude.toString();
+      var latitude = _userLocation?.latitude.toString();
+      if (longtitude != null && latitude != null) {
+        _graphQLService.SendLocation(longtitude, latitude);
+      }
     });
   }
 

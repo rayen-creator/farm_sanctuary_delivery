@@ -15,10 +15,7 @@ class _HomeState extends State<Home> {
   final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
   final List<int> colorCodes = <int>[600, 500, 100];
 
-  //***************r*Getting_current_postion_through_GPS*****************
-  // String location = 'Null';
-  // String Address = 'Null';
-  //**********************************************
+
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
   LocationData? _userLocation;

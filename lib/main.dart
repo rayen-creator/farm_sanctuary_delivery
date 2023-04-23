@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isLoggedIn = false;
-  // This widget is the root of your application.
+
   @override
   void initState() {
     super.initState();
@@ -43,8 +43,5 @@ class _MyAppState extends State<MyApp> {
         ),
         onGenerateRoute: Routes.generateRoute,
         initialRoute: _isLoggedIn ? RoutesName.home : RoutesName.login);
-
-    // home: const Login());
-    // home: const Menu());
   }
 }

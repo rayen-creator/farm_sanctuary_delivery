@@ -2,10 +2,6 @@ import 'package:bottom_bar/bottom_bar.dart';
 import 'package:farm_sanctuary_delivery/screens/Home.dart';
 import 'package:farm_sanctuary_delivery/screens/Settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/animation/animation_controller.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/ticker_provider.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -39,8 +35,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         children: [
           Home(),
           Settings()
-          // Container(color: Colors.red),
-          // Container(color: Colors.green),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);

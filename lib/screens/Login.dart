@@ -37,11 +37,10 @@ class _LoginState extends State<Login> {
   bool _passwordVisible = false;
   bool isLoggedIn = false;
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    // if (_session.id != '') {
-    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Menu()));
-    // }
+  
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -182,7 +181,6 @@ class _LoginState extends State<Login> {
                                               isLoggedIn = await _graphQLService.login(
                                                   login: logincontroller.text, password: passwordcontroller.text);
 
-                                              print('no validate :' + isLoggedIn.toString());
                                               setState(() {
                                                 isLoading = false; // set isLoading state to false
                                               });

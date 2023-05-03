@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import '../services/sessionService.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  final String username;
+
+  const Settings({Key? key, required this.username}) : super(key: key);
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -16,8 +18,6 @@ class _SettingsState extends State<Settings> {
 
   @override
   void initState() {
-    _session = SessionService();
-    _session.init();
     super.initState();
   }
 
@@ -45,7 +45,7 @@ class _SettingsState extends State<Settings> {
         child: ListView(
           children: [
             SimpleUserCard(
-              userName: _session.login.toString(),
+              userName: widget.username,
               userProfilePic: AssetImage(
                 "assets/images/Logo farmSanctuary delivery.png",
               ),

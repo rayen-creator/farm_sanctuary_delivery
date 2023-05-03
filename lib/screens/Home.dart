@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final String id;
+
+  const Home({Key? key, required this.id}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -14,49 +16,11 @@ class _HomeState extends State<Home> {
 
   final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
   final List<int> colorCodes = <int>[600, 500, 100];
-
-
-  late bool _serviceEnabled;
-  late PermissionStatus _permissionGranted;
-  LocationData? _userLocation;
-
-// This function will get user location
-  Future<void> _getUserLocation() async {
-    Location location = Location();
-
-    // Check if location service is enable
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    // Check if permission is granted
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    final locationData = await location.getLocation();
-    setState(() {
-      _userLocation = locationData;
-      var longtitude = _userLocation?.longitude.toString();
-      var latitude = _userLocation?.latitude.toString();
-      if (longtitude != null && latitude != null) {
-        _graphQLService.SendLocation(longtitude, latitude);
-      }
-    });
-  }
+  List<dynamic> orders = [];
 
   @override
   void initState() {
     super.initState();
-    _getUserLocation();
   }
 
   @override
@@ -76,35 +40,108 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.green.withOpacity(0.9),
         elevation: 0,
         title: const Center(
-            child: Text(
-          "Delivery list",
-          style: TextStyle(
-            color: Colors.white,
-            // decoration: TextDecoration.underline,
-          ),
-        )),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // ElevatedButton(onPressed: _getUserLocation, child: const Text('Check Location')),
-              const SizedBox(height: 25),
-              // Display latitude & longtitude
-              _userLocation != null
-                  ? Wrap(
-                      children: [
-                        Text('Your latitude: ${_userLocation?.latitude}'),
-                        const SizedBox(width: 10),
-                        Text('Your longtitude: ${_userLocation?.longitude}')
-                      ],
-                    )
-                  : const Text('Please enable location service and grant permission')
-            ],
+          child: Text(
+            "Delivery list",
+            style: TextStyle(
+              color: Colors.white,
+              // decoration: TextDecoration.underline,
+            ),
           ),
         ),
+      ),
+      body: FutureBuilder<List<dynamic>>(
+        future: _graphQLService.getAlldeliveries(widget.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+            List<dynamic> orders = snapshot.data!;
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: const Text(
+                      "Your deliveries has been set ,\n Drive safe and have a productive day ",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: false,
+                      itemCount: orders.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: const BorderSide(color: Colors.blueAccent, width: 1),
+                              ),
+                              child: Column(
+                                children: [
+                                  ExpansionTile(
+                                    initiallyExpanded: true,
+                                    title: Text(
+                                      "Delivery ID : " + orders[index]['id'],
+                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                    ),
+                                    backgroundColor: Colors.white12,
+                                    children: [
+                                      ConstrainedBox(
+                                        constraints: const BoxConstraints(),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Destination: " +
+                                                  orders[index]['location']['houseStreetnumber'] +
+                                                  ', ' +
+                                                  orders[index]['location']['city'] +
+                                                  ', ' +
+                                                  orders[index]['location']['state'] +
+                                                  ', ' +
+                                                  orders[index]['location']['country']),
+                                              // Text("Pick uplocation : " + orders[index]['location']['codePostal']),
+                                              Text("Pick uplocation : " + "Tunis"),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {},
+                                                child: Text('Delivered'),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }

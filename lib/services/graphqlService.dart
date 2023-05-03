@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:farm_sanctuary_delivery/graphql/graphql_config.dart';
 import 'package:farm_sanctuary_delivery/services/sessionService.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -12,6 +10,61 @@ class GraphQLService {
   GraphQLService() {
     _session = SessionService();
     _session.init();
+  }
+
+  Future<List<dynamic>> getAlldeliveries(String id) async {
+    try {
+      QueryResult result = await client.query(
+        QueryOptions(
+          document: gql("""
+            query Query(\$input: InputOrdersbyAgent!) {
+              getOrdersbyAgent(input: \$input) {
+                id
+                cartItems {
+                  name
+                  price
+                  total
+                  unit
+                  quantity
+                }
+                totalPrice
+                isDelivered
+                isConfirmed
+                location {
+                  city
+                  country
+                  codePostal
+                  houseStreetnumber
+                  state
+                }
+              }
+            }
+            """),
+          variables: {
+            "input": {
+              "id": id,
+            }
+          },
+        ),
+      );
+      if (result.hasException) {
+        print("exception" + result.exception.toString());
+        throw Exception(result.exception);
+      } else {
+        var orders = result.data!['getOrdersbyAgent'] as List<dynamic>;
+
+        // print("result" + result.data.toString());
+        // for (var o in orders) {
+        //   print("indice: ${o['totalPrice']}");
+        // }
+
+        // print("orders: ${orders.length}");
+
+        return orders;
+      }
+    } catch (error) {
+      throw error.toString();
+    }
   }
 
   Future<bool> SendLocation(String longtitue, String latitude) async {

@@ -12,7 +12,11 @@
 
   <div align="center">
   <img src="https://github.com/devicons/devicon/blob/master/icons/flutter/flutter-original.svg" alt="flutter"  width="150" height="150" />
+    <a href="https://graphql.org/">
+<img src="https://github.com/devicons/devicon/blob/master/icons/graphql/graphql-plain.svg" alt="graphql" width="150" height="150" />
+</a>
   </div>
+
   
 <!-- GETTING STARTED -->
 ## ✨ Getting Started

@@ -12,6 +12,44 @@ class GraphQLService {
     _session.init();
   }
 
+  Future<bool> updateOrderDeliveryStatus(String id, bool isDelivered) async {
+    try {
+      // var id = _session.id;
+      QueryResult result = await client.mutate(
+        MutationOptions(
+          document: gql("""
+             mutation UpdateOrderDeliveryStatus(\$id: ID!, \$isDelivered: Boolean!) {
+               updateOrderDeliveryStatus(id: \$id, isDelivered: \$isDelivered) {
+                    id
+                    isDelivered
+                    isConfirmed
+                  }
+                }   
+            """),
+          variables: {
+            "id": id,
+            "isDelivered": isDelivered,
+          },
+        ),
+      );
+      if (result.hasException) {
+        print("hasException" + result.exception.toString());
+
+        throw Exception(result.exception);
+      } else {
+        var isDelivered = result.data?['updateOrderDeliveryStatus']['isDelivered'] as bool;
+        var isConfirmed = result.data?['updateOrderDeliveryStatus']['isConfirmed'] as bool;
+        print("isDelivered" + isDelivered.toString());
+        print("isConfirmed" + isConfirmed.toString());
+      }
+      return true;
+    } catch (error) {
+      print("error" + error.toString());
+
+      return false;
+    }
+  }
+
   Future<List<dynamic>> getAlldeliveries(String id) async {
     try {
       QueryResult result = await client.query(
@@ -45,6 +83,7 @@ class GraphQLService {
               "id": id,
             }
           },
+          fetchPolicy: FetchPolicy.noCache, // disable caching
         ),
       );
       if (result.hasException) {
@@ -52,14 +91,6 @@ class GraphQLService {
         throw Exception(result.exception);
       } else {
         var orders = result.data!['getOrdersbyAgent'] as List<dynamic>;
-
-        // print("result" + result.data.toString());
-        // for (var o in orders) {
-        //   print("indice: ${o['totalPrice']}");
-        // }
-
-        // print("orders: ${orders.length}");
-
         return orders;
       }
     } catch (error) {

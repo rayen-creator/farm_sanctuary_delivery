@@ -1,4 +1,9 @@
 # Farm Sanctuary Delivery
+<div align="center">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/rayen-creator/farm_sanctuary_delivery?style=plastic" >
+
+</div>
+
   <p align="center">
   <img src="https://user-images.githubusercontent.com/57809239/221370824-2a33719b-9492-4bd5-aa96-f514d8f6846a.png"  alt="logo" width="40%" height="330px" />
   </p>
@@ -12,7 +17,11 @@
 
   <div align="center">
   <img src="https://github.com/devicons/devicon/blob/master/icons/flutter/flutter-original.svg" alt="flutter"  width="150" height="150" />
+    <a href="https://graphql.org/">
+<img src="https://github.com/devicons/devicon/blob/master/icons/graphql/graphql-plain.svg" alt="graphql" width="150" height="150" />
+</a>
   </div>
+
   
 <!-- GETTING STARTED -->
 ## ✨ Getting Started
